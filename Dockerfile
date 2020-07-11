@@ -11,9 +11,9 @@ RUN apt-get update && \
         zsh \
         wget \
         telnet \
+        dnsutils \
     && \
     rm -rf /var/lib/apt/lists/*
-
 
 ENV TERM xterm
 ENV ZSH_THEME agnoster
