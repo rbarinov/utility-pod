@@ -1,0 +1,31 @@
+name: Master deploy and publish (tag:latest)
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  IMAGE_NAME: rbarinov/utility-pod
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: docker build . --file Dockerfile --tag image
+
+      - name: Log into registry
+        run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+
+      - name: Push image
+        run: |
+          VERSION=latest
+          docker tag image $IMAGE_NAME:$VERSION
+          docker push $IMAGE_NAME:$VERSION
